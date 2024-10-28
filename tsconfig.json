@@ -9,7 +9,10 @@
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
+    "baseUrl": "./", // Cần chỉnh sửa thành thư mục gốc
+    "paths": {
+      "@/*": ["src/*"] // Giữ nguyên
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
