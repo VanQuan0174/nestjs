@@ -85,4 +85,8 @@ export class UsersService {
       throw new BadRequestException('id không đúng định dạng mongodb');
     }
   }
+
+  async findByEmail(email: string) {
+    return await this.userModel.findOne({ email });
+  }
 }
