@@ -9,6 +9,7 @@ import { isEmail } from 'class-validator';
 import { query } from 'express';
 import aqp from 'api-query-params';
 import mongoose from 'mongoose';
+import { CreateAuthDto } from '@/auth/dto/create-auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -88,5 +89,29 @@ export class UsersService {
 
   async findByEmail(email: string) {
     return await this.userModel.findOne({ email });
+  }
+
+  async handleRegister(registerDto: CreateAuthDto) {
+    const { name, email, password } = registerDto;
+    // check email người dùng
+    const checkEmail = await this.isEmailExist(email);
+    if (checkEmail) {
+      throw new BadRequestException(
+        `Email đã tồn tại : ${email} - Vui lòng sử dụng email khác`,
+      );
+    }
+    // hash password
+    const hashPassword = await hashPasswordHelper(password);
+    const user = await this.userModel.create({
+      name,
+      email,
+      password: hashPassword,
+      isActive: false,
+      codeId: '',
+      codeExpired: new Date(Date.now() + 3600 * 1000),
+    });
+    //trả ra phản hồi
+
+    //send email
   }
 }
